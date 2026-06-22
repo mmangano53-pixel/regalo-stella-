@@ -1,0 +1,313 @@
+/* GENERALE */
+body {
+    margin: 0;
+    background: #fff7f9;
+    font-family: "Poppins", sans-serif;
+    overflow: hidden;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* COPERTINA */
+#cover {
+    position: fixed;
+    inset: 0;
+    background: #fff7f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    overflow: hidden;
+}
+
+.cover-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+}
+
+.cover-photo {
+    width: 240px;
+    height: 240px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 10px solid white;
+    border-bottom: 25px solid white;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.cover-title {
+    font-size: 2rem;
+    color: #d94f7c;
+}
+
+.cover-btn {
+    padding: 12px 25px;
+    border-radius: 12px;
+    background: #ffb6c9;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+/* PAGINA PULSANTI */
+.start-container {
+    width: 100%;
+    height: 100vh;
+    background: #fff7f9;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.buttons {
+    display: flex;
+    gap: 20px;
+}
+
+button {
+    padding: 12px 25px;
+    border-radius: 12px;
+    background: #ffb6c9;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+/* ALBUM ORIZZONTALE */
+.horizontal-album {
+    display: flex;
+    flex-direction: row;
+    gap: 90px;
+    padding: 140px 40px 40px 40px;
+    overflow-x: scroll !important;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    white-space: nowrap !important;
+    height: 100vh;
+    position: relative;
+}
+
+.horizontal-album::-webkit-scrollbar {
+    display: none;
+}
+
+/* FILO */
+.horizontal-album::before {
+    content: "";
+    position: absolute;
+    top: 110px;
+    left: 0;
+    width: 18000px;
+    height: 3px;
+    background: #d1b7c9;
+    z-index: 1;
+}
+
+/* ELEMENTO APPESO */
+.hanging-item {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 0;
+    position: relative;
+    z-index: 2;
+}
+
+/* MOLLETTA PNG */
+.clip-img {
+    display: block !important;
+    width: 26px !important;
+    height: auto !important;
+    object-fit: contain !important;
+    transform: translateY(-24px) !important;
+    margin-bottom: -12px !important;
+    pointer-events: none;
+    z-index: 3;
+}
+
+/* POLAROID */
+.polaroid {
+    background: white;
+    padding: 10px;
+    padding-bottom: 30px;
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    width: 160px !important;
+    max-width: 160px !important;
+    margin-top: -20px;
+    transition: transform 0.4s ease;
+}
+
+.hanging-item:hover .polaroid {
+    transform: scale(1.05);
+}
+
+.media {
+    width: 100% !important;
+    height: auto !important;
+    border-radius: 6px;
+    object-fit: cover !important;
+}
+
+.caption {
+    margin-top: 10px;
+    font-size: 1rem;
+    color: #d94f7c;
+}
+
+/* CLICK SULLA POLAROID */
+.polaroid, 
+.polaroid * {
+    pointer-events: none;
+}
+
+.polaroid {
+    pointer-events: auto;
+}
+/* POLAROID NORMALE (FOTO E VIDEO) */
+.polaroid {
+    background: white;
+    padding: 10px;
+    padding-bottom: 30px;
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    width: 160px !important;
+    max-width: 160px !important;
+    margin-top: -20px;
+    transition: transform 0.4s ease;
+    overflow: hidden; /* ← questo taglia il messaggio finale */
+}
+
+/* POLAROID DELLA LETTERA (DEVE SOVRASCRIVERE QUELLA NORMALE) */
+.letter-box {
+    width: 350px !important;
+    max-width: 350px !important;
+    background: #fff0f5;
+    padding: 25px !important;
+    border-radius: 12px;
+    text-align: center;
+    overflow: visible !important; /* ← permette al messaggio di uscire */
+    padding-bottom: 20px !important;
+}
+
+/* LETTERA — VERSIONE CORRETTA */
+.letter-box {
+    width: 350px !important;        /* più larga */
+    background: #fff0f5;
+    padding: 25px;
+    border-radius: 12px;
+    text-align: center;
+    overflow: visible !important;   /* permette al messaggio di uscire */
+    padding-bottom: 20px !important; /* evita il tappo sotto */
+}
+
+/* TESTO CHE SI SCRIVE */
+#letterText {
+    font-size: 1.1rem;
+    color: #444;
+    white-space: pre-line;
+    margin-bottom: 20px;
+}
+
+/* BOTTONE FINALE */
+#revealBtn {
+    font-size: 1.3rem !important;
+    padding: 14px 22px !important;
+    border-radius: 12px !important;
+    background: #ff7aa2 !important;
+    color: white !important;
+    border: none !important;
+    cursor: pointer;
+    margin-top: 20px;
+    display: inline-block;
+}
+
+/* MESSAGGIO FINALE — UNICO BLOCCO */
+#finalMessage {
+    margin-top: 20px;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    line-height: 1.5;
+    color: #333;
+    max-width: 350px;
+    text-align: center;
+}
+/* POPUP LETTERA FINALE */
+.popup {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100000;
+}
+
+.popup-content {
+    background: #fff7f9;
+    padding: 25px 30px;
+    border-radius: 14px;
+    max-width: 480px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    text-align: left;
+    position: relative;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #333;
+}
+
+.popup-close {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    border: none;
+    background: transparent;
+    font-size: 1.6rem;
+    cursor: pointer;
+    color: #d94f7c;
+}
+
+/* OVERLAY ZOOM */
+.zoom-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+    backdrop-filter: blur(3px);
+}
+
+.zoom-content {
+    transform: scale(0.5);
+    transition: transform 0.35s ease;
+    max-width: 85vw !important;
+    max-height: 85vh !important;
+}
+
+.zoom-content.zoomed {
+    transform: scale(1.1) !important;
+}
+
+.zoom-content img,
+.zoom-content video {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.zoom-overlay.hidden {
+    display: none !important;
+}
