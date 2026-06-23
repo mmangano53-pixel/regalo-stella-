@@ -73,7 +73,97 @@ fakeYesBtn.addEventListener("click", () => {
     fadeIn(bgMusic);
 });
 
-/* LETTERA FINALE */
+/* -----------------------------
+   GENERAZIONE DINAMICA ALBUM
+----------------------------- */
+
+const album = document.querySelector(".horizontal-album");
+
+// FOTO
+let photos = [];
+for (let i = 0; i <= 66; i++) {
+    photos.push(`img/Foto${i}.jpg`);
+}
+
+// VIDEO
+let videos = [];
+for (let i = 1; i <= 8; i++) {
+    videos.push(`video/video${i}.mp4`);
+}
+
+// CREA POLAROID
+function createPolaroid(src, type) {
+    const item = document.createElement("div");
+    item.classList.add("hanging-item");
+
+    const clip = document.createElement("img");
+    clip.src = "img/molletta.png";
+    clip.classList.add("clip-img");
+
+    const polaroid = document.createElement("div");
+    polaroid.classList.add("polaroid");
+
+    const media = document.createElement(type === "photo" ? "img" : "video");
+    media.src = src;
+    media.classList.add("media");
+
+    if (type === "video") {
+        media.muted = true;
+        media.loop = true;
+        media.autoplay = true;
+    }
+
+    polaroid.appendChild(media);
+    item.appendChild(clip);
+    item.appendChild(polaroid);
+
+    item.addEventListener("click", () => openMedia(src, type));
+
+    album.insertBefore(item, document.querySelector(".letter-item"));
+}
+
+// CREA TUTTE LE FOTO
+photos.forEach(photo => createPolaroid(photo, "photo"));
+
+// CREA TUTTI I VIDEO
+videos.forEach(video => createPolaroid(video, "video"));
+
+/* -----------------------------
+   OVERLAY ZOOM / VIDEO PLAYER
+----------------------------- */
+
+const zoomOverlay = document.getElementById("zoomOverlay");
+const zoomContent = document.getElementById("zoomContent");
+
+function openMedia(src, type) {
+    zoomContent.innerHTML = "";
+
+    if (type === "photo") {
+        const img = document.createElement("img");
+        img.src = src;
+        img.classList.add("zoom-img");
+        zoomContent.appendChild(img);
+    } else {
+        const vid = document.createElement("video");
+        vid.src = src;
+        vid.controls = true;
+        vid.autoplay = true;
+        vid.classList.add("zoom-video");
+        zoomContent.appendChild(vid);
+    }
+
+    zoomOverlay.classList.remove("hidden");
+}
+
+zoomOverlay.addEventListener("click", () => {
+    zoomOverlay.classList.add("hidden");
+    zoomContent.innerHTML = "";
+});
+
+/* -----------------------------
+   LETTERA FINALE
+----------------------------- */
+
 let letterStarted = false;
 
 function showLetter() {
@@ -119,7 +209,6 @@ Buon Compleanno piccola stella ❤️`;
     }, { once: true });
 }
 
-/* CLICK SULLA POLAROID DELLA LETTERA */
 const letterItem = document.querySelector(".letter-item");
 if (letterItem) {
     letterItem.addEventListener("click", () => {
