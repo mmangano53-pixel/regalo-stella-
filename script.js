@@ -8,16 +8,14 @@ const mainContent = document.getElementById("mainContent");
 const bgMusic = document.getElementById("bgMusic");
 
 // ------------------------------------------------------
-// PLAYLIST AUTOMATICA
+// PLAYLIST MANUALE (necessaria per GitHub Pages)
 // ------------------------------------------------------
-async function loadPlaylist() {
-    const response = await fetch("audio/");
-    const text = await response.text();
-    const files = [...text.matchAll(/href="([^"]+\.mp3)"/g)].map(m => "audio/" + m[1]);
-    return files;
-}
+let playlist = [
+    "audio/canzone1.mp3",
+    "audio/canzone2.mp3",
+    "audio/canzone3.mp3"
+];
 
-let playlist = [];
 let currentTrack = 0;
 
 // FADE IN
@@ -67,16 +65,15 @@ yesBtn.addEventListener("mouseover", () => {
 });
 
 // “NO MA FINGO DI SÌ” → MOSTRA ALBUM + MUSICA
-fakeYesBtn.addEventListener("click", async () => {
+fakeYesBtn.addEventListener("click", () => {
     startPage.classList.add("hidden");
     mainContent.classList.remove("hidden");
-bgMusic.play().then(() => alert("Audio OK")).catch(err => alert(err));
-    playlist = await loadPlaylist();
-    if (playlist.length > 0) {
-        bgMusic.src = playlist[0];
-        bgMusic.play();
-        fadeIn(bgMusic);
-    }
+
+    // Avvia la prima canzone
+    currentTrack = 0;
+    bgMusic.src = playlist[currentTrack];
+    bgMusic.play();
+    fadeIn(bgMusic);
 });
 
 // -----------------------------
@@ -134,4 +131,3 @@ if (letterItem) {
         fadeOut(bgMusic);
         showLetter();
     });
-}
