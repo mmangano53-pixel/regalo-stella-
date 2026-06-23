@@ -69,7 +69,6 @@ fakeYesBtn.addEventListener("click", () => {
     startPage.classList.add("hidden");
     mainContent.classList.remove("hidden");
 
-    // Avvia la prima canzone
     currentTrack = 0;
     bgMusic.src = playlist[currentTrack];
     bgMusic.play();
@@ -131,3 +130,4 @@ if (letterItem) {
         fadeOut(bgMusic);
         showLetter();
     });
+}
