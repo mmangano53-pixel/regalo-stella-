@@ -1,4 +1,4 @@
-/* ELEMENTI BASE */
+// ELEMENTI BASE
 const cover = document.getElementById("cover");
 const enterBtn = document.getElementById("enterBtn");
 const startPage = document.getElementById("startPage");
@@ -7,16 +7,20 @@ const fakeYesBtn = document.getElementById("fakeYesBtn");
 const mainContent = document.getElementById("mainContent");
 const bgMusic = document.getElementById("bgMusic");
 
-/* PLAYLIST */
-let playlist = [
-    "audio/canzone1.mp3",
-    "audio/canzone2.mp3",
-    "audio/canzone3.mp3"
-];
+// ------------------------------------------------------
+// PLAYLIST AUTOMATICA
+// ------------------------------------------------------
+async function loadPlaylist() {
+    const response = await fetch("audio/");
+    const text = await response.text();
+    const files = [...text.matchAll(/href="([^"]+\.mp3)"/g)].map(m => "audio/" + m[1]);
+    return files;
+}
 
+let playlist = [];
 let currentTrack = 0;
 
-/* FADE IN */
+// FADE IN
 function fadeIn(audio, duration = 3000) {
     audio.volume = 0;
     let step = 0.02;
@@ -26,7 +30,7 @@ function fadeIn(audio, duration = 3000) {
     }, duration / (0.4 / step));
 }
 
-/* FADE OUT */
+// FADE OUT
 function fadeOut(audio, callback, duration = 2000) {
     let step = 0.02;
     let interval = setInterval(() => {
@@ -39,7 +43,7 @@ function fadeOut(audio, callback, duration = 2000) {
     }, duration / (0.4 / step));
 }
 
-/* CAMBIO CANZONE */
+// CAMBIO CANZONE AUTOMATICO
 bgMusic.addEventListener("ended", () => {
     currentTrack++;
     if (currentTrack < playlist.length) {
@@ -49,88 +53,34 @@ bgMusic.addEventListener("ended", () => {
     }
 });
 
-/* COPERTINA → PAGINA PULSANTI */
+// COPERTINA → PAGINA PULSANTI
 enterBtn.addEventListener("click", () => {
     cover.remove();
     startPage.classList.remove("hidden");
 });
 
-/* TASTO “SÌ” CHE SCAPPA */
+// TASTO "SÌ" CHE SCAPPA
 yesBtn.addEventListener("mouseover", () => {
     const x = Math.random() * 300 - 150;
     const y = Math.random() * 300 - 150;
     yesBtn.style.transform = `translate(${x}px, ${y}px)`;
 });
 
-/* “NO MA FINGO DI SÌ” → MOSTRA ALBUM + MUSICA */
-fakeYesBtn.addEventListener("click", () => {
-    startPage.remove();
+// “NO MA FINGO DI SÌ” → MOSTRA ALBUM + MUSICA
+fakeYesBtn.addEventListener("click", async () => {
+    startPage.classList.add("hidden");
     mainContent.classList.remove("hidden");
-
-    currentTrack = 0;
-    bgMusic.src = playlist[currentTrack];
-    bgMusic.play();
-    fadeIn(bgMusic);
-});
-
-/* -----------------------------
-   OVERLAY ZOOM / VIDEO PLAYER
------------------------------ */
-
-const zoomOverlay = document.getElementById("zoomOverlay");
-const zoomContent = document.getElementById("zoomContent");
-
-function openMedia(src, type) {
-    if (!zoomOverlay || !zoomContent) return; // se non esiste l'overlay, evita errori
-
-    zoomContent.innerHTML = "";
-
-    if (type === "photo") {
-        const img = document.createElement("img");
-        img.src = src;
-        img.classList.add("zoom-img");
-        zoomContent.appendChild(img);
-    } else {
-        const vid = document.createElement("video");
-        vid.src = src;
-        vid.controls = true;
-        vid.autoplay = true;
-        vid.classList.add("zoom-video");
-        zoomContent.appendChild(vid);
-    }
-
-    zoomOverlay.classList.remove("hidden");
-}
-
-if (zoomOverlay) {
-    zoomOverlay.addEventListener("click", () => {
-        zoomOverlay.classList.add("hidden");
-        zoomContent.innerHTML = "";
-    });
-}
-
-/* RENDI CLICCABILI LE POLAROID ESISTENTI */
-const mediaElements = document.querySelectorAll(".polaroid .media");
-
-mediaElements.forEach(el => {
-    const tag = el.tagName.toLowerCase();
-    const type = tag === "img" ? "photo" : "video";
-    const src = el.getAttribute("src");
-
-    // rende cliccabile tutta la polaroid
-    const polaroid = el.closest(".hanging-item") || el.parentElement;
-    if (polaroid) {
-        polaroid.style.cursor = "pointer";
-        polaroid.addEventListener("click", () => {
-            openMedia(src, type);
-        });
+    playlist = await loadPlaylist();
+    if (playlist.length > 0) {
+        bgMusic.src = playlist[0];
+        bgMusic.play();
+        fadeIn(bgMusic);
     }
 });
 
-/* -----------------------------
-   LETTERA FINALE
------------------------------ */
-
+// -----------------------------
+// LETTERA NEL POPUP
+// -----------------------------
 let letterStarted = false;
 
 function showLetter() {
@@ -176,7 +126,7 @@ Buon Compleanno piccola stella ❤️`;
     }, { once: true });
 }
 
-/* CLICK SULLA POLAROID DELLA LETTERA */
+// CLICK SULLA POLAROID DELLA LETTERA
 const letterItem = document.querySelector(".letter-item");
 if (letterItem) {
     letterItem.addEventListener("click", () => {
