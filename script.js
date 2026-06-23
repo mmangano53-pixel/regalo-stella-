@@ -74,61 +74,6 @@ fakeYesBtn.addEventListener("click", () => {
 });
 
 /* -----------------------------
-   GENERAZIONE DINAMICA ALBUM
------------------------------ */
-
-const album = document.querySelector(".horizontal-album");
-
-// FOTO
-let photos = [];
-for (let i = 0; i <= 66; i++) {
-    photos.push(`img/Foto${i}.jpg`);
-}
-
-// VIDEO
-let videos = [];
-for (let i = 1; i <= 8; i++) {
-    videos.push(`video/video${i}.mp4`);
-}
-
-// CREA POLAROID
-function createPolaroid(src, type) {
-    const item = document.createElement("div");
-    item.classList.add("hanging-item");
-
-    const clip = document.createElement("img");
-    clip.src = "img/molletta.png";
-    clip.classList.add("clip-img");
-
-    const polaroid = document.createElement("div");
-    polaroid.classList.add("polaroid");
-
-    const media = document.createElement(type === "photo" ? "img" : "video");
-    media.src = src;
-    media.classList.add("media");
-
-    if (type === "video") {
-        media.muted = true;
-        media.loop = true;
-        media.autoplay = true;
-    }
-
-    polaroid.appendChild(media);
-    item.appendChild(clip);
-    item.appendChild(polaroid);
-
-    item.addEventListener("click", () => openMedia(src, type));
-
-    album.insertBefore(item, document.querySelector(".letter-item"));
-}
-
-// CREA TUTTE LE FOTO
-photos.forEach(photo => createPolaroid(photo, "photo"));
-
-// CREA TUTTI I VIDEO
-videos.forEach(video => createPolaroid(video, "video"));
-
-/* -----------------------------
    OVERLAY ZOOM / VIDEO PLAYER
 ----------------------------- */
 
@@ -136,6 +81,8 @@ const zoomOverlay = document.getElementById("zoomOverlay");
 const zoomContent = document.getElementById("zoomContent");
 
 function openMedia(src, type) {
+    if (!zoomOverlay || !zoomContent) return; // se non esiste l'overlay, evita errori
+
     zoomContent.innerHTML = "";
 
     if (type === "photo") {
@@ -155,9 +102,29 @@ function openMedia(src, type) {
     zoomOverlay.classList.remove("hidden");
 }
 
-zoomOverlay.addEventListener("click", () => {
-    zoomOverlay.classList.add("hidden");
-    zoomContent.innerHTML = "";
+if (zoomOverlay) {
+    zoomOverlay.addEventListener("click", () => {
+        zoomOverlay.classList.add("hidden");
+        zoomContent.innerHTML = "";
+    });
+}
+
+/* RENDI CLICCABILI LE POLAROID ESISTENTI */
+const mediaElements = document.querySelectorAll(".polaroid .media");
+
+mediaElements.forEach(el => {
+    const tag = el.tagName.toLowerCase();
+    const type = tag === "img" ? "photo" : "video";
+    const src = el.getAttribute("src");
+
+    // rende cliccabile tutta la polaroid
+    const polaroid = el.closest(".hanging-item") || el.parentElement;
+    if (polaroid) {
+        polaroid.style.cursor = "pointer";
+        polaroid.addEventListener("click", () => {
+            openMedia(src, type);
+        });
+    }
 });
 
 /* -----------------------------
@@ -209,6 +176,7 @@ Buon Compleanno piccola stella ❤️`;
     }, { once: true });
 }
 
+/* CLICK SULLA POLAROID DELLA LETTERA */
 const letterItem = document.querySelector(".letter-item");
 if (letterItem) {
     letterItem.addEventListener("click", () => {
