@@ -10,14 +10,11 @@ const bgMusic = document.getElementById("bgMusic");
 // ------------------------------------------------------
 // PLAYLIST AUTOMATICA
 // ------------------------------------------------------
-async function loadPlaylist() {
-    const response = await fetch("audio/");
-    const text = await response.text();
-    const files = [...text.matchAll(/href="([^"]+\.mp3)"/g)].map(m => "audio/" + m[1]);
-    return files;
-}
-
-let playlist = [];
+let playlist = [
+    "audio/canzone1.mp3",
+    "audio/canzone2.mp3",
+    "audio/canzone3.mp3"
+];
 let currentTrack = 0;
 
 // FADE IN
@@ -67,15 +64,54 @@ yesBtn.addEventListener("mouseover", () => {
 });
 
 // “NO MA FINGO DI SÌ” → MOSTRA ALBUM + MUSICA
-fakeYesBtn.addEventListener("click", async () => {
+fakeYesBtn.addEventListener("click", () => {
     startPage.classList.add("hidden");
     mainContent.classList.remove("hidden");
-    playlist = await loadPlaylist();
-    if (playlist.length > 0) {
-        bgMusic.src = playlist[0];
-        bgMusic.play();
-        fadeIn(bgMusic);
+
+    currentTrack = 0;
+    bgMusic.src = playlist[currentTrack];
+    bgMusic.play();
+    fadeIn(bgMusic);
+});
+
+// -----------------------------
+// APRI VIDEO AL CLICK
+// -----------------------------
+
+const zoomOverlay = document.getElementById("zoomOverlay");
+const zoomContent = document.getElementById("zoomContent");
+
+// trova tutti i video nelle polaroid
+const videoElements = document.querySelectorAll(".polaroid video");
+
+videoElements.forEach(video => {
+    const src = video.getAttribute("src");
+
+    // rende cliccabile tutta la polaroid
+    const polaroid = video.closest(".hanging-item");
+    if (polaroid) {
+        polaroid.style.cursor = "pointer";
+        polaroid.addEventListener("click", () => {
+            openVideo(src);
+        });
     }
+});
+
+function openVideo(src) {
+    zoomContent.innerHTML = "";
+
+    const vid = document.createElement("video");
+    vid.src = src;
+    vid.controls = true;
+    vid.autoplay = true;
+
+    zoomContent.appendChild(vid);
+    zoomOverlay.classList.remove("hidden");
+}
+
+zoomOverlay.addEventListener("click", () => {
+    zoomOverlay.classList.add("hidden");
+    zoomContent.innerHTML = "";
 });
 
 // -----------------------------
